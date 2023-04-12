@@ -67,6 +67,35 @@ data = {
 				"options": "reference_dt",
 				"insert_after": "reference_dt",
 			},
+			{
+				"fieldname": "insurance",
+				"label": "Insurance",
+				"fieldtype": "Section Break",
+				"insert_after": "base_rate_with_margin",
+			},
+			{
+				"fieldname": "insurance_coverage_amount",
+				"label": "Insurance Coverage Amount",
+				"fieldtype": "Float",
+				"options": "Patient Insurance Coverage",
+				"insert_after": "insurance",
+				"read_only": True,
+			},
+			{
+				"fieldname": "coverage_percentage",
+				"label": "Coverage Percentage",
+				"fieldtype": "Percent",
+				"insert_after": "insurance_coverage_amount",
+				"read_only": True,
+			},
+			{
+				"fieldname": "insurance_payor",
+				"label": "Insurance Payor",
+				"fieldtype": "Link",
+				"options": "Insurance Payor",
+				"insert_after": "coverage_percentage",
+				"read_only": True,
+			},
 		],
 		"Stock Entry": [
 			{
@@ -170,6 +199,7 @@ def create_custom_records():
 	create_dosage()
 	create_dosage_form()
 	create_healthcare_item_groups()
+	create_customer_groups()
 	create_sensitivity()
 	setup_patient_history_settings()
 	setup_service_request_masters()
@@ -681,6 +711,12 @@ def get_item_group_records():
 		},
 	]
 
+def create_customer_groups():
+	records = [
+		{'doctype': 'Customer Group', 'customer_group_name': _('Insurance Payor'),
+			'is_group': 0, 'parent_customer_group': _('All Customer Groups')}
+	]
+	insert_record(records)
 
 def create_sensitivity():
 	records = [
@@ -706,12 +742,12 @@ def setup_patient_history_settings():
 		)
 	settings.save()
 
-
 def setup_service_request_masters():
 	records = [
 		{"doctype": "Patient Care Type", "patient_care_type": _("Preventive")},
 		{"doctype": "Patient Care Type", "patient_care_type": _("Intervention")},
 		{"doctype": "Patient Care Type", "patient_care_type": _("Diagnostic")},
+
 		{"doctype": "Service Request Intent", "intent": _("Order")},
 		{"doctype": "Service Request Intent", "intent": _("Proposal")},
 		{"doctype": "Service Request Intent", "intent": _("Plan")},
@@ -721,10 +757,11 @@ def setup_service_request_masters():
 		{"doctype": "Service Request Intent", "intent": _("Filler Order")},
 		{"doctype": "Service Request Intent", "intent": _("Instance Order")},
 		{"doctype": "Service Request Intent", "intent": _("Option")},
+
 		{"doctype": "Service Request Priority", "priority": _("Routine"), "color": "#29CD42"},
 		{"doctype": "Service Request Priority", "priority": _("Urgent"), "color": "#FFFF00"},
 		{"doctype": "Service Request Priority", "priority": _("ASAP"), "color": "#FFA500"},
-		{"doctype": "Service Request Priority", "priority": _("STAT"), "color": "#CB2929"},
+		{"doctype": "Service Request Priority", "priority": _("STAT"), "color": "#CB2929"}
 	]
 	insert_record(records)
 
